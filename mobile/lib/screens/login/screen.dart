@@ -44,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
         key: widget.key,
         child: SizedBox(
           width: 300,
+          height: 300,
           child: Form(
             key: _formKey,
             child: Column(
@@ -55,7 +56,28 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   validator: _validateEmail
                 ),
-                ElevatedButton(onPressed: submit, child: const Text("Submit"))
+                const Spacer(),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: "Password"),
+                  validator: _validateEmail
+                ),
+                const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: submit,
+                        child: Text("Register")
+                      ),
+                      const Spacer(),
+                      ElevatedButton(
+                        onPressed: submit,
+                        child: Text(title)
+                      ),
+                    ],
+                  )
+                )
               ],
             ),
           ),
