@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart'; 
 
 class ChatTheme {
-  static const chatPrimarySwash = MaterialColor(
+  static const backgroundColor = MaterialColor(
     0xFF252526,
     <int, Color>{ 
       50: Color(0xffce5641),//10% 

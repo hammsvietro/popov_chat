@@ -13,9 +13,9 @@ config :popov_chat,
 # Configures the endpoint
 config :popov_chat, PopovChatWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: PopovChatWeb.ErrorView, accepts: ~w(json), layout: false],
+  render_errors: [view: PopovChatWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: PopovChat.PubSub,
-  live_view: [signing_salt: "lLXCV4OQ"]
+  live_view: [signing_salt: "6y8VrdCN"]
 
 # Configures Elixir's Logger
 config :logger, :console,

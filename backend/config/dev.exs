@@ -22,7 +22,7 @@ config :popov_chat, PopovChatWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "7NAhtLEULJRfxgUIvAP137aTJudos5iQSE0yAnKsy5eoqaLrsxIRcp3rI/EJjCvX",
+  secret_key_base: "8eO+pMJ6bRPSVRDajx5U8Cutt/MTJRa412XaqiVy/+pSd0CCn4nYUeYnB5ucvBSh",
   watchers: []
 
 # ## SSL Support
@@ -48,6 +48,17 @@ config :popov_chat, PopovChatWeb.Endpoint,
 # If desired, both `http:` and `https:` keys can be
 # configured to run both http and https servers on
 # different ports.
+
+# Watch static and templates for browser reloading.
+config :popov_chat, PopovChatWeb.Endpoint,
+  live_reload: [
+    patterns: [
+      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/gettext/.*(po)$",
+      ~r"lib/popov_chat_web/(live|views)/.*(ex)$",
+      ~r"lib/popov_chat_web/templates/.*(eex)$"
+    ]
+  ]
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"

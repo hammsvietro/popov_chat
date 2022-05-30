@@ -1,5 +1,8 @@
 import Config
 
+# Only in tests, remove the complexity from the password hashing algorithm
+config :bcrypt_elixir, :log_rounds, 1
+
 # Configure your database
 #
 # The MIX_TEST_PARTITION environment variable can be used
@@ -17,7 +20,7 @@ config :popov_chat, PopovChat.Repo,
 # you can enable the server option below.
 config :popov_chat, PopovChatWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "ul27u+kA4wWWPjX9Aw7PRBWIad/X3nNKlqFdEtul6p7pnQPClYKJsQG2Z7AQaw0o",
+  secret_key_base: "yUf2EgD4TfrEDA3mdBiGkT7ZNcHuLnU1KLbz2lql/274CxqQ2kvor1NLsm/KJTmI",
   server: false
 
 # Print only warnings and errors during test

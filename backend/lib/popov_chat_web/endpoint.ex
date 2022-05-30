@@ -7,7 +7,7 @@ defmodule PopovChatWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_popov_chat_key",
-    signing_salt: "1xy6c0K1"
+    signing_salt: "4pAjW5LK"
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
@@ -25,6 +25,8 @@ defmodule PopovChatWeb.Endpoint do
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
+    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
+    plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :popov_chat
   end
