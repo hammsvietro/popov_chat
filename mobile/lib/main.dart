@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:popov_chat/components/chat_preview.dart';
+import 'package:popov_chat/routes.dart';
 import 'package:popov_chat/screens/login/screen.dart';
 import 'package:popov_chat/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,28 +32,26 @@ class MyApp extends StatelessWidget {
           
         ),
       ),
-      home: const MyHomePage(title: 'Popov Chat', init: 666),
+      routes: routes,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   final String title;
-  final int init;
-  const MyHomePage({Key? key, required this.title, required this.init}) : super(key: key);
+  const HomePage({Key? key, required this.title}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<HomePage> {
   int _counter = 0;
 
   @override
   void initState() {
     super.initState();
     loadToken();
-    _counter = widget.init;
   }
 
   loadToken() async {
@@ -63,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
   void pushLoginScreen() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(key: widget.key)));
+    Navigator.pushNamedAndRemoveUntil(context, '/authenticate', (_) => false);
   }
 
 
@@ -76,7 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        backgroundColor: ChatTheme.backgroundColor
+        backgroundColor: ChatTheme.backgroundColor,
+        foregroundColor: Colors.white,
       ),
       body: Center(
         child: Column(

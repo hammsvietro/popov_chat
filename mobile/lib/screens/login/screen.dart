@@ -38,10 +38,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   get _targetForm {
-      return isRegistering
-        ? RegisterForm(onSubmit: _onRegisterFormSubmit)
-        : LoginForm(onSubmit: _onLoginFormSubmit);
+    return isRegistering
+      ? RegisterForm(onSubmit: _onRegisterFormSubmit)
+      : LoginForm(onSubmit: _onLoginFormSubmit);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,9 +57,10 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.only(top: 8.0),
               child: GestureDetector(
                 onTap: () {
-                  setState(() {
-                    isRegistering = !isRegistering;
-                  });
+                  Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+                  // setState(() {
+                  //   isRegistering = !isRegistering;
+                  // });
                 },
                 child: Text(
                   _switchButtonText,
