@@ -62,7 +62,7 @@ defmodule PopovChat.Accounts do
 
   ## User registration
 
-  @doc """
+  @doc"""
   Registers a user.
 
   ## Examples
@@ -157,7 +157,6 @@ defmodule PopovChat.Accounts do
     |> Ecto.Multi.delete_all(:tokens, UserToken.user_and_contexts_query(user, [context]))
   end
 
-  """
   @doc """
   Returns an `%Ecto.Changeset{}` for changing the user password.
 
@@ -207,7 +206,7 @@ defmodule PopovChat.Accounts do
   def generate_user_session_token(user) do
     {token, user_token} = UserToken.build_session_token(user)
     Repo.insert!(user_token)
-    token
+    Ecto.UUID.load(token)
   end
 
   @doc """

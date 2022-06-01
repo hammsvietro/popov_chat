@@ -8,7 +8,7 @@ String? validateEmail(String? value) {
 
 String? validatePassword(String? value) {
   if (value == null || value.isEmpty) return "Required";
-  if (value.length < 12 || value.length > 72) return "Password must be between 8 and 72 characters long";
+  if (value.length < 8 || value.length > 72) return "Password must be between 8 and 72 characters long";
 
   return null;
 }

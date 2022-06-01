@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 class User {
   String name;
@@ -13,11 +15,19 @@ class LoginRequest {
   LoginRequest({required this.email, required this.password});
 }
 
-typedef LoginFormSubmitCallback = void Function(LoginRequest login);
-
 class RegisterRequest {
-  String name;
+  String nickname;
   String password;
   String email;
-  RegisterRequest({required this.name, required this.password, required this.email});
+  RegisterRequest({required this.nickname, required this.password, required this.email});
+  Map<String, dynamic> toMap() {
+    return {
+      'nickname': nickname,
+      'password': password,
+      'email': email,
+    };
+  }
 }
+
+typedef LoginFormSubmitCallback = void Function(LoginRequest login);
+typedef RegisterFormSubmitCallback = void Function(RegisterRequest register);

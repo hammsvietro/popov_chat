@@ -2,28 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:popov_chat/func/validators.dart';
 import 'package:popov_chat/model/user.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({
     required this.onSubmit,
     Key? key,
   }) : super(key: key);
 
-  final LoginFormSubmitCallback onSubmit;
+  final RegisterFormSubmitCallback onSubmit;
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _RegisterFormState extends State<RegisterForm> {
 
   final _formKey = GlobalKey<FormState>();
-  final _loginRequest = LoginRequest(email: '', password: '');
+  final _registerRequest = RegisterRequest(email: '', password: '', nickname: '');
 
  void submit() {
     // First validate form.
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save(); // Save our form now.
-      widget.onSubmit(_loginRequest);
+      widget.onSubmit(_registerRequest);
     }
   }
 
@@ -31,7 +31,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return SizedBox(
         width: 300,
-        height: 250,
+        height: 300,
         child: Form(
           key: _formKey,
           child: Column(
@@ -44,7 +44,12 @@ class _LoginFormState extends State<LoginForm> {
                   
                 ),
                 validator: validateEmail,
-                onChanged: (value) => _loginRequest.email = value,
+                onChanged: (value) => _registerRequest.email = value,
+              ),
+              const Spacer(),
+              TextFormField(
+                decoration: const InputDecoration(labelText: "Nickname"),
+                onChanged: (value) => _registerRequest.nickname = value,
               ),
               const Spacer(),
               TextFormField(
@@ -53,7 +58,7 @@ class _LoginFormState extends State<LoginForm> {
                 autocorrect: false,
                 decoration: const InputDecoration(labelText: "Password"),
                 validator: validatePassword,
-                onChanged: (value) => _loginRequest.password = value,
+                onChanged: (value) => _registerRequest.password = value,
               ),
               const Spacer(),
               Padding(
@@ -62,7 +67,7 @@ class _LoginFormState extends State<LoginForm> {
                   width: 200,
                   child: ElevatedButton(
                     onPressed: submit,
-                    child: const Text("Login")
+                    child: const Text("Register")
                   )
                 ),
               )
