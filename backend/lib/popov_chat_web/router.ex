@@ -1,8 +1,6 @@
 defmodule PopovChatWeb.Router do
   use PopovChatWeb, :router
 
-  import PopovChatWeb.UserAuth
-
   pipeline :browser do
     plug :accepts, ["html"]
   end
@@ -20,6 +18,8 @@ defmodule PopovChatWeb.Router do
   # Other scopes may use custom stacks.
   scope "/api", PopovChatWeb do
     pipe_through :api
+
+    post "/token", TokenController, :login
   
   end
 

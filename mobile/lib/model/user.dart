@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
+import 'package:popov_chat/model/network.dart';
 class User {
   String name;
   Image? profilePicture;
@@ -26,6 +25,24 @@ class RegisterRequest {
       'password': password,
       'email': email,
     };
+  }
+}
+
+class AuthenticationResponse extends ResponseBase {
+  String? token;
+  
+  AuthenticationResponse({
+    required this.token,
+    required bool success,
+    required String? error
+  }) : super(error: error, success: success);
+
+  static AuthenticationResponse fromJSON(Map<String, dynamic> json) {
+    return AuthenticationResponse(
+      token: json["token"],
+      success: json["success"],
+      error: json["error"]
+    );
   }
 }
 
