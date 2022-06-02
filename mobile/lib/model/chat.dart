@@ -10,7 +10,7 @@ class ChatBase {
 }
 
 class ChatPreview extends ChatBase {
-  String? lastMessage;
+  Message? lastMessage;
 
   ChatPreview({
     required String name,

@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:popov_chat/components/chat_preview.dart';
+import 'package:popov_chat/components/chat_preview_list.dart';
+import 'package:popov_chat/func/auth.dart';
 import 'package:popov_chat/routes.dart';
-import 'package:popov_chat/screens/login/screen.dart';
 import 'package:popov_chat/theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,8 +43,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<HomePage> {
-  int _counter = 0;
-
   @override
   void initState() {
     super.initState();
@@ -55,20 +50,23 @@ class _MyHomePageState extends State<HomePage> {
   }
 
   loadToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString("token");
+    var token = await getToken();
     if(token == null) {
-      pushLoginScreen();
+      goToLoginScreen();
     }
   }
-  void pushLoginScreen() {
+
+  void goToLoginScreen() {
     Navigator.pushNamedAndRemoveUntil(context, '/authenticate', (_) => false);
   }
 
-
-  void _incrementCounter() {
-    setState(() => _counter++);
+  void _doLogout() async {
+    bool hasRemoved = await removeToken();
+    if(hasRemoved) {
+      goToLoginScreen();
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -77,30 +75,28 @@ class _MyHomePageState extends State<HomePage> {
         title: Text(widget.title),
         backgroundColor: ChatTheme.backgroundColor,
         foregroundColor: Colors.white,
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem<int>(
+                    value: 0,
+                    child: Text("New group", style: TextStyle(color: Colors.black)),
+                ),
+                const PopupMenuItem<int>(
+                    value: 1,
+                    child: Text("Logout", style: TextStyle(color: Colors.black)),
+                ),
+              ];
+            },
+            onSelected: (value){
+              if(value == 1){
+                 _doLogout(); 
+              }
+            }
+          )
+        ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            ChatPreview(key: widget.key)
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: ChatTheme.primaryColor,
-        foregroundColor: ChatTheme.backgroundColor,
-        splashColor: ChatTheme.primaryColor.shade800,
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
+      body: ChatPreviewList(key: widget.key));
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:popov_chat/api.dart';
+import 'package:popov_chat/func/auth.dart';
 import 'package:popov_chat/model/user.dart';
 import 'package:popov_chat/screens/login/login_form.dart';
 import 'package:popov_chat/screens/login/register_form.dart';
@@ -19,16 +20,27 @@ class _LoginScreenState extends State<LoginScreen> {
     return isRegistering ? "Register" : "Login";
   }
 
-  void _onLoginFormSubmit(LoginRequest login) {
-    print(login.email);
-    print(login.password);
+  void _onLoginFormSubmit(LoginRequest login) async {
+    print(login.toMap());
+    var authResponse = await loginUser(login);
+    print(authResponse.success);
+    print(authResponse.token);
+    if (authResponse.success) {
+      await saveToken(authResponse.token!);
+      _goToMainScreen();
+    }
   }
   
   void _onRegisterFormSubmit(RegisterRequest register) async {
-    print(register.email);
-    print(register.password);
-    print(register.nickname);
-    await registerUser(register);
+    var authResponse = await registerUser(register);
+    if (authResponse.success) {
+      await saveToken(authResponse.token!);
+      _goToMainScreen();
+    }
+  }
+
+  void _goToMainScreen() {
+      Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
   }
 
   get _switchButtonText {
@@ -57,10 +69,9 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.only(top: 8.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-                  // setState(() {
-                  //   isRegistering = !isRegistering;
-                  // });
+                  setState(() {
+                    isRegistering = !isRegistering;
+                  });
                 },
                 child: Text(
                   _switchButtonText,
