@@ -12,6 +12,11 @@ if System.get_env("PHX_SERVER") && System.get_env("RELEASE_NAME") do
   config :popov_chat, PopovChatWeb.Endpoint, server: true
 end
 
+config :ex_aws,
+  region: "sa-east-1",
+  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
@@ -27,6 +32,7 @@ if config_env() == :prod do
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
+
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you
