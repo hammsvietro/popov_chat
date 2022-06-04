@@ -24,4 +24,15 @@ defmodule PopovChatWeb.GroupController do
 
     json(conn, groups) 
   end
+
+  def details(conn, %{"group_id" => group_id}) do
+    json(conn, PopovChat.Groups.group_details(group_id))
+  end
+
+  def join(conn, %{"group_id" => group_id}) do
+    IO.inspect(group_id)
+    user = conn.assigns[:current_user]
+    group = PopovChat.Groups.join_group(user.id, group_id)
+    json(conn, group) 
+  end
 end

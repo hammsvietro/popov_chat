@@ -1,7 +1,7 @@
 defmodule PopovChat.Schemas.Group do
   use Ecto.Schema
   import Ecto.Changeset
-  @derive {Jason.Encoder, only: [:image, :name]}
+  @derive {Jason.Encoder, only: [:image, :name, :users]}
 
   schema "groups" do
     field :image, :string
@@ -25,7 +25,7 @@ defmodule PopovChat.Schemas.Group do
   end
 
   defp put_image_name(changeset, %{"image" => file}) do
-    file_name = Ecto.UUID.generate() <> file.filename
+    file_name = Ecto.UUID.generate() <> file.filename |> PopovChat.Bucket.build_full_url()
     changeset
       |> put_change(:image, file_name)
   end

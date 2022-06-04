@@ -35,8 +35,10 @@ defmodule PopovChatWeb.Router do
   scope "/api/group", PopovChatWeb do
     pipe_through [:api, :require_authenticated_user]
     post "/", GroupController, :create
-    get "/search", GroupController, :list_not_joined
     get "/", GroupController, :list
+    get "/search", GroupController, :list_not_joined
+    get "/:group_id", GroupController, :join
+    post "/:group_id", GroupController, :details
   end
 
 

@@ -1,6 +1,7 @@
 defmodule PopovChat.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  @derive {Jason.Encoder, only: [:email, :nickname, :profile_picture]}
 
   schema "users" do
     field :email, :string
@@ -79,7 +80,7 @@ defmodule PopovChat.Accounts.User do
   end
 
   defp put_image_name(changeset, %{"profile_picture" => file}) do
-    file_name = Ecto.UUID.generate() <> file.filename
+    file_name = Ecto.UUID.generate() <> file.filename |> PopovChat.Bucket.build_full_url()
     changeset
       |> put_change(:profile_picture, file_name)
   end

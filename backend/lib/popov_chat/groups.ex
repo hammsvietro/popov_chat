@@ -26,8 +26,25 @@ defmodule PopovChat.Groups do
     Repo.all(query)
   end
 
+  @spec list_groups_user_joined(User.t()) :: User.t()
   def list_groups_user_joined(%User{} = user) do
     Repo.preload user, :groups
+  end
+
+  @spec group_details(number()) :: Group.t()
+  def group_details(group_id) do
+    Repo.get(Group, group_id) |> Repo.preload(:users)
+  end
+
+  @spec join_group(number(), number()) :: Group.t()
+  def join_group(user_id, group_id) do
+    UserGroup.changeset(%UserGroup{}, %{
+      user_id: user_id,
+      group_id: group_id,
+      is_admin: false,
+    }) |> Repo.insert()
+    group_details(group_id)
+    
   end
 
   defp _create_group_multi(%User{} = user, attrs) do
