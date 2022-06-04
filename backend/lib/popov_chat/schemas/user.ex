@@ -9,6 +9,12 @@ defmodule PopovChat.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
 
+    many_to_many :groups, PopovChat.Schemas.Group,
+      join_through: PopovChat.Schemas.UserGroup
+
+    has_many :users_groups, PopovChat.Schemas.UserGroup,
+      on_delete: :delete_all
+
     timestamps()
   end
 
