@@ -1,6 +1,7 @@
 defmodule PopovChat.Schemas.Group do
   use Ecto.Schema
   import Ecto.Changeset
+  @derive {Jason.Encoder, only: [:image, :name]}
 
   schema "groups" do
     field :image, :string
@@ -11,13 +12,21 @@ defmodule PopovChat.Schemas.Group do
     has_many :users_groups, PopovChat.Schemas.UserGroup,
       on_delete: :delete_all
 
+
     timestamps()
   end
 
   @doc false
   def changeset(group, attrs) do
     group
-    |> cast(attrs, [:name, :image])
+    |> cast(attrs, [:name])
+    |> put_image_name(attrs)
     |> validate_required([:name, :image])
+  end
+
+  defp put_image_name(changeset, %{"image" => file}) do
+    file_name = Ecto.UUID.generate() <> file.filename
+    changeset
+      |> put_change(:image, file_name)
   end
 end

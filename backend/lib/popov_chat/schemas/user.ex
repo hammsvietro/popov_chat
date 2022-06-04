@@ -41,7 +41,7 @@ defmodule PopovChat.Accounts.User do
     |> cast(attrs, [:email, :password, :nickname])
     |> validate_email()
     |> validate_password(opts)
-    |> put_image_name()
+    |> put_image_name(attrs)
   end
 
   defp validate_email(changeset) do
@@ -78,9 +78,10 @@ defmodule PopovChat.Accounts.User do
     end
   end
 
-  defp put_image_name(changeset) do
+  defp put_image_name(changeset, %{"profile_picture" => file}) do
+    file_name = Ecto.UUID.generate() <> file.filename
     changeset
-      |> put_change(:profile_picture, Ecto.UUID.generate())
+      |> put_change(:profile_picture, file_name)
   end
 
   @doc """
