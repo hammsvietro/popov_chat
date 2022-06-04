@@ -3,8 +3,14 @@ defmodule PopovChatWeb.UserController do
   alias PopovChat.Accounts
 
   def create(conn, body) do
-    {:ok, user} = Accounts.register_user(body)
-    {:ok, token} = Accounts.generate_user_session_token(user)
-    json(conn, %{success: true, token: token})
+    case Accounts.register_user(body) do 
+      {:ok, user} -> token = Accounts.generate_user_session_token(user)
+        conn
+          |> PopovChatWeb.UserAuth.write_login_cookies(token)
+          |> send_resp(200, "")
+      {:error, changeset} -> conn
+        |> put_status(400)
+        |> json(JaSerializer.EctoErrorSerializer.format(changeset.errors))
+    end
   end
 end

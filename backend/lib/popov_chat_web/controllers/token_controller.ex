@@ -2,10 +2,17 @@ defmodule PopovChatWeb.TokenController do
   use PopovChatWeb, :controller
   alias PopovChat.Accounts
   alias PopovChat.Accounts.User
+  alias PopovChatWeb.UserAuth
 
   def login(conn, %{"email" => email, "password" => password}) do
     user = Accounts.get_user_by_email_and_password(email, password)
     generate_token_and_respond(conn, user)
+  end
+
+  def delete(conn, _) do
+    conn
+      |> UserAuth.log_out_user()
+      |> send_resp(200, "")
   end
 
   defp generate_token_and_respond(conn, nil),
@@ -13,8 +20,10 @@ defmodule PopovChatWeb.TokenController do
 
   defp generate_token_and_respond(conn, %User{} = user) do
 
-    {:ok, token} = Accounts.generate_user_session_token(user)
-
-    json(conn, %{ success: true, token: token })
+    token = Accounts.generate_user_session_token(user)
+    
+    conn
+    |> UserAuth.write_login_cookies(token)
+    |> json(%{success: true})
   end
 end

@@ -52,6 +52,7 @@ defmodule PopovChat.MixProject do
       {:ex_aws_s3, "~> 2.0"},
       {:hackney, "~> 1.9"},
       {:sweet_xml, "~> 0.6"},
+      {:ja_serializer, "~> 0.17.0"}
     ]
   end
 

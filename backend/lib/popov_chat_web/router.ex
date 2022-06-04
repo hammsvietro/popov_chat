@@ -1,5 +1,6 @@
 defmodule PopovChatWeb.Router do
   use PopovChatWeb, :router
+  import PopovChatWeb.UserAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -7,6 +8,8 @@ defmodule PopovChatWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+    plug :fetch_current_user
   end
 
   scope "/", PopovChatWeb do
@@ -20,6 +23,7 @@ defmodule PopovChatWeb.Router do
     pipe_through :api
 
     post "/token", TokenController, :login
+    delete "/token", TokenController, :delete
   
   end
 
@@ -27,6 +31,17 @@ defmodule PopovChatWeb.Router do
      pipe_through :api
      post "/register", UserController, :create
    end
+
+  scope "/api/group", PopovChatWeb do
+    pipe_through :api
+    post "/", GroupController, :create
+  end
+
+  scope "/api/group", PopovChatWeb do
+    pipe_through [:api, :require_authenticated_user]
+    get "/list", GroupController, :read_sesh
+  end
+
 
   # Enables LiveDashboard only for development
   #

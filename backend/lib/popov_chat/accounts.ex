@@ -75,9 +75,17 @@ defmodule PopovChat.Accounts do
 
   """
   def register_user(attrs) do
-    %User{}
-    |> User.registration_changeset(attrs)
-    |> Repo.insert()
+      %User{}
+        |> User.registration_changeset(attrs)
+        |> Repo.insert()
+        |> post_register_user(attrs)
+  end
+
+  defp post_register_user({:error, %Ecto.Changeset{} = changeset}, _attrs), do: {:error, changeset}
+  defp post_register_user({:ok, user}, attrs) do
+    %{"profile_picture" => profile_picture} = attrs
+    PopovChat.Bucket.upload_image(profile_picture, user.profile_picture)
+    {:ok, user}
   end
 
   @doc """
@@ -170,6 +178,7 @@ defmodule PopovChat.Accounts do
     User.password_changeset(user, attrs, hash_password: false)
   end
 
+
   @doc """
   Updates the user password.
 
@@ -206,7 +215,7 @@ defmodule PopovChat.Accounts do
   def generate_user_session_token(user) do
     {token, user_token} = UserToken.build_session_token(user)
     Repo.insert!(user_token)
-    Ecto.UUID.load(token)
+    token
   end
 
   @doc """

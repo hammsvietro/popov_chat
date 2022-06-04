@@ -12,6 +12,13 @@ if System.get_env("PHX_SERVER") && System.get_env("RELEASE_NAME") do
   config :popov_chat, PopovChatWeb.Endpoint, server: true
 end
 
+
+bucket_name = System.get_env("BUCKET_NAME", "popovchat")
+
+config :popov_chat,
+  bucket_name: bucket_name,
+  s3_url_base: System.get_env("S3_URL_BASE", "https://#{bucket_name}.s3.sa-east-1.amazonaws.com")
+
 config :ex_aws,
   region: "sa-east-1",
   access_key_id: {:system, "AWS_ACCESS_KEY_ID"},

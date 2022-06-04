@@ -14,7 +14,7 @@ defmodule PopovChat.Accounts.UserToken do
   @session_validity_in_days 60
 
   schema "users_tokens" do
-    field :token, :string
+    field :token, :binary
     field :context, :string
     field :sent_to, :string
     belongs_to :user, PopovChat.Accounts.User
@@ -42,7 +42,7 @@ defmodule PopovChat.Accounts.UserToken do
   session they deem invalid.
   """
   def build_session_token(user) do
-    token = Ecto.UUID.bingenerate()
+    token = :crypto.strong_rand_bytes(@rand_size)
     {token, %UserToken{token: token, context: "session", user_id: user.id}}
   end
 

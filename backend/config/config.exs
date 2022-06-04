@@ -7,8 +7,11 @@
 # General application configuration
 import Config
 
+bucket_name = System.get_env("BUCKET_NAME", "popovchat")
+
 config :popov_chat,
   ecto_repos: [PopovChat.Repo]
+
 
 # Configures the endpoint
 config :popov_chat, PopovChatWeb.Endpoint,

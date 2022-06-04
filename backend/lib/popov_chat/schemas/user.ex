@@ -5,6 +5,7 @@ defmodule PopovChat.Accounts.User do
   schema "users" do
     field :email, :string
     field :nickname, :string
+    field :profile_picture, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
@@ -40,6 +41,7 @@ defmodule PopovChat.Accounts.User do
     |> cast(attrs, [:email, :password, :nickname])
     |> validate_email()
     |> validate_password(opts)
+    |> put_image_name()
   end
 
   defp validate_email(changeset) do
@@ -74,6 +76,11 @@ defmodule PopovChat.Accounts.User do
     else
       changeset
     end
+  end
+
+  defp put_image_name(changeset) do
+    changeset
+      |> put_change(:profile_picture, Ecto.UUID.generate())
   end
 
   @doc """
