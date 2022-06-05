@@ -21,9 +21,9 @@ defmodule PopovChatWeb.TokenController do
   defp generate_token_and_respond(conn, %User{} = user) do
 
     token = Accounts.generate_user_session_token(user)
-    
+    base64_encoded_token = Base.url_encode64(token, padding: false)
     conn
     |> UserAuth.write_login_cookies(token)
-    |> json(%{success: true})
+    |> json(%{success: true, token: base64_encoded_token})
   end
 end
