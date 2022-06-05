@@ -37,8 +37,8 @@ defmodule PopovChatWeb.Router do
     post "/", GroupController, :create
     get "/", GroupController, :list
     get "/search", GroupController, :list_not_joined
-    get "/:group_id", GroupController, :join
-    post "/:group_id", GroupController, :details
+    post "/:group_id", GroupController, :join
+    get "/:group_id", GroupController, :details
   end
 
 

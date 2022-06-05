@@ -22,11 +22,16 @@ defmodule PopovChatWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   @impl true
-  def connect(params, socket, _connect_info) do
-    IO.inspect(params)
-    IO.inspect(socket)
-    {:ok, socket}
+  def connect(%{"user_token" => token}, socket, _connect_info) do
+    IO.inspect(PopovChatWeb.UserAuth.get_user_by_encoded_session(token))
+    case PopovChatWeb.UserAuth.get_user_by_encoded_session(token) do
+      {:ok, user} -> 
+        {:ok, assign(socket, current_user: user)}
+      {:error, _} -> {:error, socket}
+    end
+    
   end
+
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #

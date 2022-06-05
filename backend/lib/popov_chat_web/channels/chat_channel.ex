@@ -3,6 +3,7 @@ defmodule PopovChatWeb.ChatChannel do
 
   @impl true
   def join("chat:"<> group_id, payload, socket) do
+    IO.inspect(group_id)
     if authorized?(payload) do
       {:ok, socket}
     else

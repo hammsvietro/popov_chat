@@ -3,7 +3,6 @@ defmodule PopovChatWeb.UserAuth do
   import Phoenix.Controller
 
   alias PopovChat.Accounts
-  alias PopovChatWeb.Router.Helpers, as: Routes
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -58,6 +57,16 @@ defmodule PopovChatWeb.UserAuth do
     conn
     |> renew_session()
     |> delete_resp_cookie(@remember_me_cookie)
+  end
+
+  @spec get_user_by_encoded_session(String.t()) :: PopovChat.Accounts.User.t()
+  def get_user_by_encoded_session(token) do
+    with {:ok, decoded_token} <- Base.url_decode64(token, padding: false),
+         %PopovChat.Accounts.User{} = user <- Accounts.get_user_by_session_token(decoded_token) do
+      {:ok, user}  
+    else
+      _ -> {:error, nil}
+    end
   end
 
   @doc """

@@ -18,6 +18,7 @@ defmodule PopovChatWeb.GroupController do
   end
 
   def list(conn, _) do
+    PopovChatWeb.Endpoint.broadcast("chat:ovo", "caraiba", %{fala_derick: true})
     groups = conn.assigns[:current_user]
       |> PopovChat.Groups.list_groups_user_joined()
       |> Map.get(:groups)
