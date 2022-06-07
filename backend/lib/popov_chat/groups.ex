@@ -18,18 +18,22 @@ defmodule PopovChat.Groups do
 
   @spec list_groups_user_has_not_joined(number()) :: list(Group.t())
   def list_groups_user_has_not_joined(user_id) do
-    query = 
-        from(UserGroup, as: :ug)
-          |> join(:left, [ug: user_group], assoc(user_group, :group), as: :group)
-          |> where([ug: user_group], user_group.user_id != ^user_id)
-          |> select([group: g], %{id: g.id, name: g.name, image: g.image})
-          |> group_by([group: g], g.id)
-    Repo.all(query)
+    from(Group, as: :g)
+      |> select([g: g], g)
+      |> where([g: g], g.id not in subquery(
+           from(ug in UserGroup, select: ug.group_id, where: ug.user_id == ^user_id)
+         ))
+      |> Repo.all
   end
 
   @spec list_groups_user_joined(User.t()) :: User.t()
   def list_groups_user_joined(%User{} = user) do
-    Repo.preload user, :groups
+    Repo.preload(user, :groups)
+    |> Map.get(:groups)
+    |> Enum.map(fn %Group{} = group ->
+      %Group{group | last_message: %{sheesh: true}}
+      |> Repo.preload(:users)
+    end)
   end
 
   @spec group_details(number()) :: Group.t()

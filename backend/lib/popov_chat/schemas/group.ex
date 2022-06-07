@@ -1,11 +1,26 @@
 defmodule PopovChat.Schemas.Group do
   use Ecto.Schema
   import Ecto.Changeset
-  @derive {Jason.Encoder, only: [:image, :name, :users]}
+
+  defimpl Jason.Encoder, for: PopovChat.Schemas.Group  do
+    def encode(value, opts) do
+      base = _get_base(value)
+      Jason.Encode.map(Map.take(value, base), opts)
+    end
+
+    defp _get_base(value) do
+      if Ecto.assoc_loaded?(value.users) do
+        [:id, :image, :name, :users, :last_message]
+      else
+        [:id, :image, :name, :last_message]
+      end
+    end
+  end
 
   schema "groups" do
     field :image, :string
     field :name, :string
+    field :last_message, :map, virtual: true
     many_to_many :users, PopovChat.Accounts.User,
       join_through: PopovChat.Schemas.UserGroup
 

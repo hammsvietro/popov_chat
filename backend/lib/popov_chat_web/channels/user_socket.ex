@@ -23,7 +23,6 @@ defmodule PopovChatWeb.UserSocket do
   # performing token verification on connect.
   @impl true
   def connect(%{"user_token" => token}, socket, _connect_info) do
-    IO.inspect(PopovChatWeb.UserAuth.get_user_by_encoded_session(token))
     case PopovChatWeb.UserAuth.get_user_by_encoded_session(token) do
       {:ok, user} -> 
         {:ok, assign(socket, current_user: user)}

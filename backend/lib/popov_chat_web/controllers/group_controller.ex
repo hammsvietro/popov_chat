@@ -18,10 +18,8 @@ defmodule PopovChatWeb.GroupController do
   end
 
   def list(conn, _) do
-    PopovChatWeb.Endpoint.broadcast("chat:ovo", "caraiba", %{fala_derick: true})
     groups = conn.assigns[:current_user]
       |> PopovChat.Groups.list_groups_user_joined()
-      |> Map.get(:groups)
 
     json(conn, groups) 
   end
@@ -31,7 +29,6 @@ defmodule PopovChatWeb.GroupController do
   end
 
   def join(conn, %{"group_id" => group_id}) do
-    IO.inspect(group_id)
     user = conn.assigns[:current_user]
     group = PopovChat.Groups.join_group(user.id, group_id)
     json(conn, group) 

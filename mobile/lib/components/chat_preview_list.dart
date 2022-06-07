@@ -28,9 +28,11 @@ class _ChatPreviewListState extends State<ChatPreviewList> {
     final chatChannel = socket.channel("chat:${authStorage.userId}", {});
     chatChannel.on("message", ((payload, ref, joinRef) {print("new message!");print(payload);}));
     chatChannel.join();
+    /*
     chatChannel.push(event: "ping")!.receive("ok", (response) {
       print(response);
     });
+    */
   }
   List<ChatPreview> chats = [
   ChatPreview(
