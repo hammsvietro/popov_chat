@@ -36,9 +36,11 @@ class RegisterRequest {
 
 class AuthenticationResponse extends ResponseBase {
   String? token;
+  int? user_id;
   
   AuthenticationResponse({
     required this.token,
+    required this.user_id,
     required bool success,
     required String? error
   }) : super(error: error, success: success);
@@ -46,6 +48,7 @@ class AuthenticationResponse extends ResponseBase {
   static AuthenticationResponse fromJSON(Map<String, dynamic> json) {
     return AuthenticationResponse(
       token: json["token"],
+      user_id: json["user_id"],
       success: json["success"],
       error: json["error"]
     );

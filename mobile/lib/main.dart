@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:popov_chat/api.dart';
 import 'package:popov_chat/components/chat_preview_list.dart';
 import 'package:popov_chat/func/auth.dart';
 import 'package:popov_chat/routes.dart';
@@ -45,15 +46,21 @@ class HomePage extends StatefulWidget {
 class _MyHomePageState extends State<HomePage> {
   @override
   void initState() {
-    super.initState();
     loadToken();
+    ApiClient().setup();
+    super.initState();
   }
 
+
   loadToken() async {
-    var token = await getToken();
+    var token = await getAuth();
     if(token == null) {
       goToLoginScreen();
+    } else {
+      var a = ApiClient();
+      a.listGroups();
     }
+
   }
 
   void goToLoginScreen() {
@@ -61,7 +68,7 @@ class _MyHomePageState extends State<HomePage> {
   }
 
   void _doLogout() async {
-    bool hasRemoved = await removeToken();
+    bool hasRemoved = await removeAuth();
     if(hasRemoved) {
       goToLoginScreen();
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:popov_chat/api.dart';
 import 'package:popov_chat/func/auth.dart';
+import 'package:popov_chat/model/auth.dart';
 import 'package:popov_chat/model/user.dart';
 import 'package:popov_chat/screens/login/login_form.dart';
 import 'package:popov_chat/screens/login/register_form.dart';
@@ -16,25 +17,26 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isRegistering = false;
+  final ApiClient _apiClient = ApiClient();
+
   get title {
     return isRegistering ? "Register" : "Login";
   }
 
   void _onLoginFormSubmit(LoginRequest login) async {
-    print(login.toMap());
-    var authResponse = await loginUser(login);
-    print(authResponse.success);
-    print(authResponse.token);
+    var authResponse = await _apiClient.loginUser(login);
     if (authResponse.success) {
-      await saveToken(authResponse.token!);
+      var authStorage = AuthStorage(token: authResponse.token!, userId: authResponse.user_id!);
+      await saveAuth(authStorage);
       _goToMainScreen();
     }
   }
   
   void _onRegisterFormSubmit(RegisterRequest register) async {
-    var authResponse = await registerUser(register);
+    var authResponse = await _apiClient.registerUser(register);
     if (authResponse.success) {
-      await saveToken(authResponse.token!);
+      var authStorage = AuthStorage(token: authResponse.token!, userId: authResponse.user_id!);
+      await saveAuth(authStorage);
       _goToMainScreen();
     }
   }

@@ -15,6 +15,7 @@ defmodule PopovChat.Groups do
       end
   end
 
+
   @spec list_groups_user_has_not_joined(number()) :: list(Group.t())
   def list_groups_user_has_not_joined(user_id) do
     query = 
@@ -45,6 +46,13 @@ defmodule PopovChat.Groups do
     }) |> Repo.insert()
     group_details(group_id)
     
+  end
+
+  def get_user_ids_by_group(group_id) do
+    query = from u in UserGroup,
+              where: u.group_id == ^group_id,
+              select: u.user_id
+    Repo.all(query)
   end
 
   defp _create_group_multi(%User{} = user, attrs) do

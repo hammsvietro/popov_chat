@@ -1,18 +1,26 @@
+import 'dart:convert';
+
+import 'package:popov_chat/model/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const String sessionTokenKey = 'session-token';
+const String authStorageKey = 'session-token';
 
-Future<void> saveToken(String token) async {
+Future<void> saveAuth(AuthStorage auth) async {
   var sharedPrefences = await SharedPreferences.getInstance();
-  await sharedPrefences.setString(sessionTokenKey, token);
+  await sharedPrefences.setString(authStorageKey, json.encode(auth.toMap()));
 }
 
-Future<String?> getToken() async {
+Future<AuthStorage?> getAuth() async {
   var sharedPrefences = await SharedPreferences.getInstance();
-  return sharedPrefences.getString(sessionTokenKey);
+  var stringifiedAuthStorage = sharedPrefences.getString(authStorageKey);
+  if (stringifiedAuthStorage != null) {
+    return AuthStorage.fromMap(json.decode(stringifiedAuthStorage));
+  } else {
+    return null;
+  }
 }
 
-Future<bool> removeToken() async {
+Future<bool> removeAuth() async {
   var sharedPrefences = await SharedPreferences.getInstance();
-  return sharedPrefences.remove(sessionTokenKey);
+  return sharedPrefences.remove(authStorageKey);
 }

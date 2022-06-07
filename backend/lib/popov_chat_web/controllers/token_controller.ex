@@ -24,6 +24,6 @@ defmodule PopovChatWeb.TokenController do
     base64_encoded_token = Base.url_encode64(token, padding: false)
     conn
     |> UserAuth.write_login_cookies(token)
-    |> json(%{success: true, token: base64_encoded_token})
+    |> json(%{success: true, token: base64_encoded_token, user_id: user.id})
   end
 end
