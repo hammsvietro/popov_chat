@@ -47,7 +47,6 @@ class _MyHomePageState extends State<HomePage> {
   @override
   void initState() {
     loadToken();
-    ApiClient().setup();
     super.initState();
   }
 

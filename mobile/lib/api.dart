@@ -8,13 +8,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:popov_chat/model/user.dart';
 
 class ApiClient {
-  static final ApiClient _apiClient = ApiClient._internal();
+  static final ApiClient _apiClient = ApiClient._singleton();
   final _dio = Dio();
   bool hasSetup = false;
   factory ApiClient() {
     return _apiClient;
   }
-  Future<void> setup() async {
+  Future<void> setupIfNeeded() async {
+    if(hasSetup) return;
+
     Directory tempDir = await getTemporaryDirectory();
     var cookieJar = PersistCookieJar(
     ignoreExpires: true,
@@ -24,12 +26,14 @@ class ApiClient {
     _dio.interceptors.add(CookieManager(cookieJar));
     hasSetup = true;
   }
-  ApiClient._internal();
+
+  ApiClient._singleton() {
+    setupIfNeeded();
+  }
 
   Future<AuthenticationResponse> registerUser(RegisterRequest request) async {
-    if(!hasSetup) {
-      await setup();
-    }
+    await setupIfNeeded();
+
     http.Response res = await http.post(
       Uri.parse('http://10.0.2.2:4000/api/user/register'),
       headers: {"Content-Type": "application/json"},
@@ -40,21 +44,19 @@ class ApiClient {
   }
 
   Future<AuthenticationResponse> loginUser(LoginRequest request) async {
-    if(!hasSetup) {
-      await setup();
-    }
-    var a = await _dio.post(
+    await setupIfNeeded();
+    var res = await _dio.post(
       'http://10.0.2.2:4000/api/token',
       data: request.toMap(),
     );
     
-    return AuthenticationResponse.fromJSON(a.data!);
+    return AuthenticationResponse.fromJSON(res.data!);
   }
 
   Future<void> listGroups() async {
 
     if(!hasSetup) {
-      await setup();
+      await setupIfNeeded();
     }
     var a = await _dio.get('http://10.0.2.2:4000/api/group/11');
     print(a.data);
