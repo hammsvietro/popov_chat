@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:popov_chat/api.dart';
 import 'package:popov_chat/components/chat_preview_list.dart';
 import 'package:popov_chat/func/auth.dart';
@@ -7,7 +8,12 @@ import 'package:popov_chat/socket.dart';
 import 'package:popov_chat/state.dart';
 import 'package:popov_chat/theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  await ApiClient().setupIfNeeded();
+  await SocketClient().setupIfNeeded();
+  AppState();
   runApp(const MyApp());
 }
 
@@ -50,9 +56,6 @@ class _MyHomePageState extends State<HomePage> {
   void initState() {
     loadToken();
     super.initState();
-    ApiClient().setupIfNeeded();
-    SocketClient().setupIfNeeded();
-    AppState();
   }
 
 

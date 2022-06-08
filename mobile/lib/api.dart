@@ -6,6 +6,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:popov_chat/model/user.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiClient {
   static final ApiClient _apiClient = ApiClient._singleton();
@@ -31,11 +32,15 @@ class ApiClient {
     setupIfNeeded();
   }
 
+  get _apiBase {
+    return dotenv.env["REST_API_ADDRESS"];
+  }
+
   Future<AuthenticationResponse> registerUser(RegisterRequest request) async {
     await setupIfNeeded();
 
     http.Response res = await http.post(
-      Uri.parse('http://10.0.2.2:4000/api/user/register'),
+      Uri.parse('$_apiBase/api/user/register'),
       headers: {"Content-Type": "application/json"},
       body: json.encode(request.toMap())
     );
@@ -46,7 +51,7 @@ class ApiClient {
   Future<AuthenticationResponse> loginUser(LoginRequest request) async {
     await setupIfNeeded();
     var res = await _dio.post(
-      'http://10.0.2.2:4000/api/token',
+      '$_apiBase/api/token',
       data: request.toMap(),
     );
     

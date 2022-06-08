@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:phoenix_wings/phoenix_wings.dart';
 import 'package:popov_chat/func/auth.dart';
 import 'package:popov_chat/model/message.dart';
@@ -24,7 +25,7 @@ class SocketClient {
 
   connectPhoenix() async {
     var authStorage = await getAuth();
-    _socket = PhoenixSocket("ws://10.0.2.2:4000/socket/websocket",  socketOptions: PhoenixSocketOptions(params: {"user_token":  authStorage!.token}));
+    _socket = PhoenixSocket("${dotenv.env["SOCKET_ENDPOINT_ADDRESS"]}/socket/websocket",  socketOptions: PhoenixSocketOptions(params: {"user_token":  authStorage!.token}));
     await _socket.connect();
     _chatChannel = _socket.channel("chat:${authStorage.userId}", {});
     _subscribeToChat();
