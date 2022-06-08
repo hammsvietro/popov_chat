@@ -59,6 +59,5 @@ class ApiClient {
       await setupIfNeeded();
     }
     var a = await _dio.get('http://10.0.2.2:4000/api/group');
-    print(a.data);
   }
 }

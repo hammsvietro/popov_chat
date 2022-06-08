@@ -5,8 +5,9 @@ import 'package:popov_chat/model/user.dart';
 class ChatBase {
   String name;
   Image image;
+  int id;
 
-  ChatBase({required this.name, required this.image});
+  ChatBase({required this.name, required this.image, required this.id});
 }
 
 class ChatPreview extends ChatBase {
@@ -15,17 +16,26 @@ class ChatPreview extends ChatBase {
   ChatPreview({
     required String name,
     required Image image,
+    required int id,
     this.lastMessage
-  }) : super(name: name, image: image);
+  }) : super(name: name, image: image, id: id);
 }
 
 class Chat extends ChatBase {
-  List<Message> messages;
+  List<Message> _messages = [];
   List<User> users;
   Chat({
     required String name,
     required Image image,
-    required this.messages,
-    required this.users
-  }) : super(name: name, image: image);
+    required int id,
+    required this.users,
+    required List<Message> messages,
+  }) : super(name: name, image: image, id: id) {
+    _messages = messages;
+  }
+
+  get messages {
+    _messages.sort((a,b) => a.insertedAt.compareTo(b.insertedAt));
+    return _messages;
+  }
 }

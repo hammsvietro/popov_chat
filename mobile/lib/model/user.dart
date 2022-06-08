@@ -2,10 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:popov_chat/model/network.dart';
 class User {
   String name;
-  Image? profilePicture;
+  String profilePicture;
   int id;
 
-  User({required this.name, required this.id, this.profilePicture});
+  User({required this.name, required this.id, required this.profilePicture});
+
+  static User fromPayload(Map<String, dynamic> payload) {
+    return User(
+      name: payload["nickname"],
+      profilePicture: payload["profile_picture"],
+      id: payload["id"]
+    );
+  }
 }
 
 class LoginRequest {

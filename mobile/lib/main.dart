@@ -3,6 +3,8 @@ import 'package:popov_chat/api.dart';
 import 'package:popov_chat/components/chat_preview_list.dart';
 import 'package:popov_chat/func/auth.dart';
 import 'package:popov_chat/routes.dart';
+import 'package:popov_chat/socket.dart';
+import 'package:popov_chat/state.dart';
 import 'package:popov_chat/theme.dart';
 
 void main() {
@@ -48,6 +50,9 @@ class _MyHomePageState extends State<HomePage> {
   void initState() {
     loadToken();
     super.initState();
+    ApiClient().setupIfNeeded();
+    SocketClient().setupIfNeeded();
+    AppState();
   }
 
 
@@ -55,11 +60,7 @@ class _MyHomePageState extends State<HomePage> {
     var token = await getAuth();
     if(token == null) {
       goToLoginScreen();
-    } else {
-      var a = ApiClient();
-      a.listGroups();
     }
-
   }
 
   void goToLoginScreen() {

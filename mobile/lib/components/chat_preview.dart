@@ -20,7 +20,7 @@ class _ChatPreviewState extends State<ChatPreviewComponent> {
   final DateFormat formatter = DateFormat('jm');
   
   get formattedDate {
-    return formatter.format(widget.chatPreview.lastMessage!.dateSent);
+    return formatter.format(widget.chatPreview.lastMessage!.insertedAt);
   }
 
   @override

@@ -53,6 +53,7 @@ defmodule PopovChat.Groups do
   end
 
   def get_user_ids_by_group(group_id) do
+    IO.inspect(group_id)
     query = from u in UserGroup,
               where: u.group_id == ^group_id,
               select: u.user_id
