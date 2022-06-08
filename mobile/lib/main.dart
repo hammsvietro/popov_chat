@@ -4,6 +4,7 @@ import 'package:popov_chat/api.dart';
 import 'package:popov_chat/components/chat_preview_list.dart';
 import 'package:popov_chat/func/auth.dart';
 import 'package:popov_chat/routes.dart';
+import 'package:popov_chat/screens/chat/screen.dart';
 import 'package:popov_chat/socket.dart';
 import 'package:popov_chat/state.dart';
 import 'package:popov_chat/theme.dart';
@@ -107,6 +108,6 @@ class _MyHomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: ChatPreviewList(key: widget.key));
+      body: ChatWidget(key: widget.key, groupId: 11,));
   }
 }
