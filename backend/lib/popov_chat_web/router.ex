@@ -41,6 +41,12 @@ defmodule PopovChatWeb.Router do
     get "/:group_id", GroupController, :details
   end
 
+  scope "/api/message", PopovChatWeb do
+    pipe_through [:api, :require_authenticated_user]
+
+    get "/:group_id", MessageController, :list
+  end
+
 
   # Enables LiveDashboard only for development
   #

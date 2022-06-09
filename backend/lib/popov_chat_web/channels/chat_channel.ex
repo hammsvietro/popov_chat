@@ -10,7 +10,9 @@ defmodule PopovChatWeb.ChatChannel do
   # by sending replies to requests from the client
   @impl true
   def handle_in("message", payload, socket) do
-
+    message = %{"content" => payload["content"], "group_id" => payload["groupId"], "user_id" => socket.assigns.current_user.id}
+    IO.inspect(message)
+    PopovChat.Messages.handle_new_message(message)
     {:noreply, socket}
   end
 

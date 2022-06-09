@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:popov_chat/api.dart';
 import 'package:popov_chat/components/chat_preview_list.dart';
 import 'package:popov_chat/func/auth.dart';
 import 'package:popov_chat/routes.dart';
+import 'package:popov_chat/screens/chat/screen.dart';
+import 'package:popov_chat/socket.dart';
+import 'package:popov_chat/state.dart';
 import 'package:popov_chat/theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
+  await ApiClient().setup();
+  await SocketClient().setup();
+  AppState();
   runApp(const MyApp());
 }
 
@@ -55,11 +64,7 @@ class _MyHomePageState extends State<HomePage> {
     var token = await getAuth();
     if(token == null) {
       goToLoginScreen();
-    } else {
-      var a = ApiClient();
-      a.listGroups();
     }
-
   }
 
   void goToLoginScreen() {
@@ -103,6 +108,7 @@ class _MyHomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: ChatPreviewList(key: widget.key));
+      // body: ChatWidget(key: widget.key, groupId: 11,));
+      body: const ChatPreviewList());
   }
 }

@@ -1,7 +1,7 @@
 defmodule PopovChat.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
-  @derive {Jason.Encoder, only: [:email, :nickname, :profile_picture]}
+  @derive {Jason.Encoder, only: [:id, :email, :nickname, :profile_picture]}
 
   schema "users" do
     field :email, :string

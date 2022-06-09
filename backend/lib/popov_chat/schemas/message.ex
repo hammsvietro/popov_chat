@@ -1,7 +1,7 @@
 defmodule PopovChat.Schemas.Message do
   use Ecto.Schema
   import Ecto.Changeset
-  @derive {Jason.Encoder, only: [:image, :content, :user, :inserted_at]}
+  @derive {Jason.Encoder, only: [:group_id, :id, :image, :content, :user, :inserted_at]}
 
   schema "messages" do
     field :content, :string
