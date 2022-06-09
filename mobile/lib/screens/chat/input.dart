@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:popov_chat/theme.dart';
 
 class ChatInputWidget extends StatefulWidget {
-  final void Function(String?) onSubmit;
+  final void Function(String) onSubmit;
   const ChatInputWidget({Key? key, required this.onSubmit}) : super(key: key);
 
   @override
@@ -10,7 +10,8 @@ class ChatInputWidget extends StatefulWidget {
 }
 
 class _ChatInputWidgetState extends State<ChatInputWidget> {
-  String? input;
+  String? _input;
+  var _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,7 +46,8 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                     disabledBorder: InputBorder.none,
                   ),
                   style: TextStyle(fontSize: 14),
-                  onChanged: (value) => input = value,
+                  onChanged: (value) => _input = value,
+                  controller: _controller,
                 ),
               ),
             ),
@@ -55,7 +57,13 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                 child: Material(
                   color: ChatTheme.primaryColor, // button color
                   child: InkWell(
-                    onTap: () => widget.onSubmit(input), // button pressed
+                    onTap: () {
+                      if(_input != null) {
+                        widget.onSubmit(_input!);
+                        _input = null;
+                        _controller.clear();
+                      }
+                    }, // button pressed
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const <Widget>[

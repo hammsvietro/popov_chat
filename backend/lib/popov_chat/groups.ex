@@ -1,7 +1,7 @@
 defmodule PopovChat.Groups do
   import Ecto.Query, warn: false
   alias PopovChat.Repo
-  alias PopovChat.Schemas.{Group, UserGroup}
+  alias PopovChat.Schemas.{Group, UserGroup, Message}
   alias PopovChat.Accounts.User
 
   @spec create_group(User.t(), any()) :: {:ok, any()}| {:error, any()}
@@ -28,17 +28,26 @@ defmodule PopovChat.Groups do
 
   @spec list_groups_user_joined(User.t()) :: User.t()
   def list_groups_user_joined(%User{} = user) do
+    message_preload_query = from m in Message, limit: 1, order_by: [desc: m.inserted_at]
     Repo.preload(user, :groups)
     |> Map.get(:groups)
     |> Enum.map(fn %Group{} = group ->
-      %Group{group | last_message: %{sheesh: true}}
-      |> Repo.preload(:users)
+      group
+        |> Repo.preload(:users)
+        |> Repo.preload(messages: {message_preload_query, :user})
     end)
   end
 
   @spec group_details(number()) :: Group.t()
   def group_details(group_id) do
-    Repo.get(Group, group_id) |> Repo.preload(:users)
+    message_preload_query = from m in Message, limit: 30, order_by:  [desc: m.inserted_at]
+    query = from(
+      g in Group,
+      where: g.id == ^group_id,
+      join: u in assoc(g, :users),
+      preload: [users: u, messages: ^{message_preload_query, :user}]
+    )
+    Repo.one!(query)
   end
 
   @spec join_group(number(), number()) :: Group.t()

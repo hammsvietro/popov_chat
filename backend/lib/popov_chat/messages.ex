@@ -1,6 +1,9 @@
 defmodule PopovChat.Messages do
   alias PopovChat.Schemas.Message
   alias PopovChat.Repo
+  import Ecto.Query, warn: false
+
+  @per_chunk 30
 
   def handle_new_message(message) do
     message
@@ -34,6 +37,16 @@ defmodule PopovChat.Messages do
       "message",
       message
     )
+  end
+
+  def get_group_messages(group_id, chunk) do
+    from(m in Message,
+      where: m.group_id == ^group_id,
+      limit: @per_chunk,
+      offset: ^(@per_chunk * chunk),
+      join: u in assoc(m, :user),
+      preload: [user: u]
+    ) |> Repo.all
   end
 
 end

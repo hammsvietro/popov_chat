@@ -10,10 +10,9 @@ class SocketClient {
   factory SocketClient() {
     return _apiClient;
   }
-  SocketClient._singleton() {
-    setupIfNeeded();
-  }
-  Future<void> setupIfNeeded() async {
+  SocketClient._singleton();
+
+  Future<void> setup() async {
     if(hasSetup) return;
     await connectPhoenix();
     hasSetup=true;
@@ -38,9 +37,19 @@ class SocketClient {
         _state.addMessage(message);
       });
     _chatChannel.join();
-    _chatChannel.push(event: "message", payload: {
-      "content": "hello man",
-      "groupId": 11,
-    });
+    _chatChannel.push(
+      event: "message",
+      payload: {
+        "content": "hello man",
+        "groupId": 11,
+      }
+    );
+  }
+
+  void pushMessage(MessagePushPayload message) {
+    _chatChannel.push(
+      event: "message",
+      payload: message.toPayload()
+    );
   }
 }

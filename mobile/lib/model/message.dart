@@ -3,7 +3,7 @@ import 'package:popov_chat/model/user.dart';
 
 class Message {
   int id;
-  String? content;
+  String content;
   DateTime insertedAt;
   Image? image;
   User sender; 
@@ -14,7 +14,7 @@ class Message {
     required this.insertedAt,
     required this.groupId,
     required this.id,
-    this.content,
+    required this.content,
     this.image,
   });
 
@@ -27,5 +27,19 @@ class Message {
       sender: User.fromPayload(payload["user"]),
       groupId: payload["group_id"],
     );
+  }
+
+}
+
+class MessagePushPayload {
+  String content;
+  int groupId;
+  MessagePushPayload({required this.content, required this.groupId});
+
+  Map<String, dynamic> toPayload() {
+    return {
+      "content": content,
+      "groupId": groupId,
+    };
   }
 }

@@ -10,9 +10,9 @@ defmodule PopovChat.Schemas.Group do
 
     defp _get_base(value) do
       if Ecto.assoc_loaded?(value.users) do
-        [:id, :image, :name, :users, :last_message]
+        [:id, :image, :name, :users, :messages]
       else
-        [:id, :image, :name, :last_message]
+        [:id, :image, :name, :messages]
       end
     end
   end
@@ -20,12 +20,13 @@ defmodule PopovChat.Schemas.Group do
   schema "groups" do
     field :image, :string
     field :name, :string
-    field :last_message, :map, virtual: true
     many_to_many :users, PopovChat.Accounts.User,
       join_through: PopovChat.Schemas.UserGroup
 
     has_many :users_groups, PopovChat.Schemas.UserGroup,
       on_delete: :delete_all
+
+    has_many :messages, PopovChat.Schemas.Message
 
 
     timestamps()

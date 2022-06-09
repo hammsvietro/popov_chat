@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:popov_chat/model/chat.dart';
+import 'package:popov_chat/model/message.dart';
+import 'package:popov_chat/model/user.dart';
 import 'package:popov_chat/screens/chat/input.dart';
+import 'package:popov_chat/screens/chat/message_list.dart';
+import 'package:popov_chat/socket.dart';
 import 'package:popov_chat/state.dart';
 import 'package:popov_chat/theme.dart';
 
@@ -15,6 +19,7 @@ class ChatWidget extends StatefulWidget {
 class _ChatWidgetState extends State<ChatWidget> {
   late Chat chat;
   bool hasLoaded = false;
+  final SocketClient _socket = SocketClient();
   @override
   void initState() {
     super.initState();
@@ -34,8 +39,30 @@ class _ChatWidgetState extends State<ChatWidget> {
       ),
       body: Column(
         children: [
-          const Expanded(child: Text("hey")),
-          ChatInputWidget(onSubmit: (input) => print(input))
+        Expanded(child: MessageListWidget(
+            userId: 1,
+            chat: Chat(
+              name: "cleber",
+              image: Image.asset(""),
+              id: 12,
+              users: [],
+              messages: [
+                Message(sender: User(id: 1, name: "pidrow", profilePicture: ""), insertedAt: DateTime.now(), groupId: 11, id: 1, content: "cleber aujisdhaushdasuh duasdhuashadsuhadshdasdsuahudsahudsahudsahuhudsahusdahudsahuasdhuhsaudhuasduhdsahudsahuyhuydsahudsahudsahuhudsahudashudsahudsahuhdas"),
+                Message(sender: User(id: 1, name: "pidrow", profilePicture: ""), insertedAt: DateTime.now(), groupId: 11, id: 1, content: "cleber aujisdhaushdasuh duasdhuashadsuhadshdasdsuahudsahudsahudsahuhudsahusdahudsahuasdhuhsaudhuasduhdsahudsahuyhuydsahudsahudsahuhudsahudashudsahudsahuhdas"),
+                Message(sender: User(id: 1, name: "pidrow", profilePicture: ""), insertedAt: DateTime.now(), groupId: 11, id: 1, content: "cleber aujisdhaushdasuh duasdhuashadsuhadshdasdsuahudsahudsahudsahuhudsahusdahudsahuasdhuhsaudhuasduhdsahudsahuyhuydsahudsahudsahuhudsahudashudsahudsahuhdas"),
+                Message(sender: User(id: 1, name: "pidrow", profilePicture: ""), insertedAt: DateTime.now(), groupId: 11, id: 1, content: "cleber aujisdhaushdasuh duasdhuashadsuhadshdasdsuahudsahudsahudsahuhudsahusdahudsahuasdhuhsaudhuasduhdsahudsahuyhuydsahudsahudsahuhudsahudashudsahudsahuhdas"),
+                Message(sender: User(id: 2, name: "pidrow", profilePicture: ""), insertedAt: DateTime.now(), groupId: 11, id: 1, content: "cleber"),
+                Message(sender: User(id: 2, name: "pidrow", profilePicture: ""), insertedAt: DateTime.now(), groupId: 11, id: 1, content: "cleber"),
+                Message(sender: User(id: 2, name: "pidrow", profilePicture: ""), insertedAt: DateTime.now(), groupId: 11, id: 1, content: "cleber"),
+                Message(sender: User(id: 2, name: "pidrow", profilePicture: ""), insertedAt: DateTime.now(), groupId: 11, id: 1, content: "cleber"),
+                Message(sender: User(id: 2, name: "pidrow", profilePicture: ""), insertedAt: DateTime.now(), groupId: 11, id: 1, content: "cleber"),
+                Message(sender: User(id: 2, name: "pidrow", profilePicture: ""), insertedAt: DateTime.now(), groupId: 11, id: 1, content: "cleber"),
+                Message(sender: User(id: 2, name: "pidrow", profilePicture: ""), insertedAt: DateTime.now(), groupId: 11, id: 1, content: "cleber"),
+              ]),
+        )),
+          ChatInputWidget(onSubmit: (input) => 
+            _socket.pushMessage(MessagePushPayload(content: input, groupId: 11))
+          )
         ],
       )
     );

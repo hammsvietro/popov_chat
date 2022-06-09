@@ -12,8 +12,8 @@ import 'package:popov_chat/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await ApiClient().setupIfNeeded();
-  await SocketClient().setupIfNeeded();
+  await ApiClient().setup();
+  await SocketClient().setup();
   AppState();
   runApp(const MyApp());
 }
@@ -108,6 +108,7 @@ class _MyHomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: ChatWidget(key: widget.key, groupId: 11,));
+      // body: ChatWidget(key: widget.key, groupId: 11,));
+      body: const ChatPreviewList());
   }
 }
