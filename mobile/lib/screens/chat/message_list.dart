@@ -28,6 +28,7 @@ class _MessageListWidgetState extends State<MessageListWidget> {
             padding: const EdgeInsets.only(left: 8, right: 8, bottom: 4, top: 4),
             margin: const EdgeInsets.only(left: 8, right: 8, bottom: 4, top: 4),
             child: Row(
+              key: Key(message.id.toString()),
               mainAxisAlignment: isSelf
                 ? MainAxisAlignment.end
                 : MainAxisAlignment.start,

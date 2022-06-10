@@ -1,9 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:popov_chat/api.dart';
 import 'package:popov_chat/components/chat_preview.dart';
 import 'package:popov_chat/model/chat.dart';
-import 'package:popov_chat/model/message.dart';
-import 'package:popov_chat/model/user.dart';
+import 'package:popov_chat/state.dart';
 
 class ChatPreviewList extends StatefulWidget {
   const ChatPreviewList({Key? key}) : super(key: key);
@@ -20,10 +20,12 @@ class _ChatPreviewListState extends State<ChatPreviewList> {
   void initState() {
     super.initState();
     getChats();
+    AppState().getStateChangedStream().listen((_) => setState(() => {}) );
   }
 
+
   Future<void> getChats() async {
-    _chats = await ApiClient().listGroups();
+    _chats = AppState().chats;
     setState(() {
       _hasLoaded = true;
     });

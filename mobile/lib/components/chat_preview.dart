@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:popov_chat/model/chat.dart';
+import 'package:popov_chat/screens/chat/screen.dart';
 
 class ChatPreviewComponent extends StatefulWidget {
   final Chat chatPreview;
@@ -27,9 +28,13 @@ class _ChatPreviewState extends State<ChatPreviewComponent> {
 
   get message {
     if(widget.chatPreview.lastMessageSent != null) {
-      return Text(
-        "${widget.chatPreview.lastMessageSent?.sender.name}: ${widget.chatPreview.lastMessageSent?.content}",
-        overflow: TextOverflow.ellipsis,
+      return SizedBox(
+        width: 250,
+        child: Text(
+          "${widget.chatPreview.lastMessageSent?.sender.name}: ${widget.chatPreview.lastMessageSent?.content}",
+          maxLines: 1,
+          style: const TextStyle(fontSize: 13)
+        )
       );
     } else {
       return const Text("No messages sent yet");
@@ -39,7 +44,11 @@ class _ChatPreviewState extends State<ChatPreviewComponent> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => {print("tapped")},
+      onTap: () => Navigator.pushNamed(
+        context,
+        '/chat',
+        arguments: ChatWidgetArguments(groupId: widget.chatPreview.id)
+      ),
       child: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -54,16 +63,33 @@ class _ChatPreviewState extends State<ChatPreviewComponent> {
           padding: const EdgeInsets.only(top: 26,left: 12,right: 12,bottom: 26),
           child: Row(
             children: [
-              widget.chatPreview.image,
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(widget.chatPreview.image)
+                    )
+                  ),
+              ),
               Container(
                 padding: const EdgeInsets.only(left: 8),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.chatPreview.name),
+                    Text(
+                      widget.chatPreview.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16
+                      )
+                    ),
                     Container(
-                      constraints: const BoxConstraints(maxWidth: 250),
+                      margin: const EdgeInsets.only(top: 2),
+                      constraints: const BoxConstraints(maxWidth: 220),
                       child: message
                     )
                   ]

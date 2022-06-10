@@ -1,34 +1,33 @@
 import 'dart:async';
-
-import 'package:flutter/material.dart';
+import 'package:popov_chat/api.dart';
 import 'package:popov_chat/model/chat.dart';
 import 'package:popov_chat/model/message.dart';
+import 'package:rxdart/rxdart.dart';
 
 class AppState {
-  static final AppState _apiClient = AppState._singleton();
+  static final AppState _appState = AppState._singleton();
   factory AppState() {
-    return _apiClient;
+    return _appState;
   }
   AppState._singleton();
 
-  final _controller = StreamController<bool>();
+  final _controller = BehaviorSubject();
+  final _apiClient = ApiClient();
 
   Stream<void> getStateChangedStream() {
-    return _controller.stream.asBroadcastStream();
+    return _controller.stream;
   }
 
-  final List<Chat> chats = [Chat(
-    name: "ovo",
-    id: 11,
-    users: [],
-    messages: [],
-    image: Image.asset("assets/images/prog_snob.png", width: 40)),
-  ];
+  Future<void> setup() async {
+    chats.addAll(await _apiClient.listGroups());
+  }
+
+  final List<Chat> chats = [];
 
   List<Chat> addChat(Chat chat) {
     chats.add(chat);
     _controller.add(true);
-    return chats; 
+    return chats;
   }
 
   Chat getChat(int chatId) {
@@ -41,10 +40,22 @@ class AppState {
     return this.chats; 
   }
 
-  Chat addMessage(Message message) {
-    var chat = chats.firstWhere((chat) => chat.id == message.groupId);
-    chat.messages.add(message);
+  Future<void> getMoreMessages(int groupId) async {
+    var chat = chats.firstWhere((chat) => chat.id == groupId);
+    List<Message> newMessages = await _apiClient .getMessagesForGroup(groupId, chat.currentMessageChunk);
+    if(newMessages.isEmpty) {
+      chat.hasReadAllMessages = true;
+    } else {
+      chat.addMessages(newMessages);
+      chat.currentMessageChunk++;
+    }
     _controller.add(true);
-    return chat;
+  }
+
+  void addMessage(Message message) {
+    chats
+      .firstWhere((chat) => chat.id == message.groupId)
+      .addMessage(message);
+    _controller.add(true);
   }
 }

@@ -23,9 +23,7 @@ defmodule PopovChat.Messages do
     message.group_id
       |> PopovChat.Groups.get_user_ids_by_group
       |> Enum.each(fn user_id -> 
-        if user_id != message.user_id do
           _notify_user(message, user_id)
-        end
       end)
     message
   end
@@ -44,6 +42,7 @@ defmodule PopovChat.Messages do
       where: m.group_id == ^group_id,
       limit: @per_chunk,
       offset: ^(@per_chunk * chunk),
+      order_by: [desc: m.inserted_at],
       join: u in assoc(m, :user),
       preload: [user: u]
     ) |> Repo.all

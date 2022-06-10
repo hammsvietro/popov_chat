@@ -37,13 +37,6 @@ class SocketClient {
         _state.addMessage(message);
       });
     _chatChannel.join();
-    _chatChannel.push(
-      event: "message",
-      payload: {
-        "content": "hello man",
-        "groupId": 11,
-      }
-    );
   }
 
   void pushMessage(MessagePushPayload message) {

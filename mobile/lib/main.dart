@@ -14,7 +14,7 @@ void main() async {
   await dotenv.load(fileName: ".env");
   await ApiClient().setup();
   await SocketClient().setup();
-  AppState();
+  await AppState().setup();
   runApp(const MyApp());
 }
 

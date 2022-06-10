@@ -29,6 +29,13 @@ class Message {
     );
   }
 
+  @override
+  bool operator == (other) => 
+     other is Message && id == other.id;
+
+  @override
+  int get hashCode => hashValues(id, groupId, insertedAt.hashCode);
+
 }
 
 class MessagePushPayload {

@@ -6,6 +6,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:popov_chat/model/chat.dart';
+import 'package:popov_chat/model/message.dart';
 import 'package:popov_chat/model/user.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -57,11 +58,16 @@ class ApiClient {
   Future<List<Chat>> listGroups() async {
     var res = await _dio.get('$_apiBase/api/group');
     
-    (res.data! as List)
-      .forEach((x) => print(x["users"]));
-
     return (res.data as List)
       .map((x) => Chat.fromMap(x))
+      .toList();
+  }
+
+  Future<List<Message>> getMessagesForGroup(int groupId, int chunk) async {
+    var res = await _dio.get('$_apiBase/api/message/$groupId', queryParameters: {'chunk': chunk});
+
+    return (res.data as List)
+      .map((x) => Message.fromPayload(x))
       .toList();
   }
 }

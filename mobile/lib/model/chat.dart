@@ -6,7 +6,9 @@ class Chat {
   List<Message> _messages = [];
   List<User> users;
   String name;
-  Image image;
+  String image;
+  int currentMessageChunk = 0;
+  bool hasReadAllMessages = false;
   int id;
 
   Chat({
@@ -20,7 +22,6 @@ class Chat {
   }
 
   get messages {
-    _messages.sort((a,b) => a.insertedAt.compareTo(b.insertedAt));
     return _messages;
   }
 
@@ -28,10 +29,26 @@ class Chat {
     return _messages.isEmpty ? null : _messages.first;
   }
 
+  List<Message> addMessage(Message message) {
+    _messages.insert(0, message);
+    return _guaranteeUnique();
+  }
+
+  List<Message> addMessages(List<Message> messages) {
+    _messages.insertAll(0, messages);
+    return _guaranteeUnique();
+  }
+
+  List<Message> _guaranteeUnique() {
+    _messages.sort((a, b) => b.insertedAt.compareTo(a.insertedAt));
+    _messages = _messages.toSet().toList();
+    return _messages;
+  }
+
   static Chat fromMap(Map<String, dynamic> map) {
     return Chat(
       name: map["name"],
-      image: Image.network(map["image"], width: 40),
+      image: map["image"],
       id: map["id"],
       users: (map["users"] as List<dynamic>)
           .map((e) => User.fromPayload((e))).toList(),
