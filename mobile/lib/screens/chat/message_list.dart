@@ -40,7 +40,7 @@ class _MessageListWidgetState extends State<MessageListWidget> {
                     minWidth: 50,
                     maxHeight: 1000,
                     minHeight: 40
-                    ),
+                  ),
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -50,9 +50,7 @@ class _MessageListWidgetState extends State<MessageListWidget> {
                       child: Text(message.content, style: TextStyle(color: isSelf ? Colors.black : Colors.white)),
                     ),
                   )
-
                 ]),
-                  
               ],
             ), 
           );

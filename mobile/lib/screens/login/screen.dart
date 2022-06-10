@@ -5,6 +5,7 @@ import 'package:popov_chat/model/auth.dart';
 import 'package:popov_chat/model/user.dart';
 import 'package:popov_chat/screens/login/login_form.dart';
 import 'package:popov_chat/screens/login/register_form.dart';
+import 'package:popov_chat/socket.dart';
 import 'package:popov_chat/theme.dart';
 
 
@@ -28,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (authResponse.success) {
       var authStorage = AuthStorage(token: authResponse.token!, userId: authResponse.userId!);
       await saveAuth(authStorage);
+      SocketClient().connectPhoenix();
       _goToMainScreen();
     }
   }

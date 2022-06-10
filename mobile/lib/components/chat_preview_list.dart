@@ -16,11 +16,19 @@ class _ChatPreviewListState extends State<ChatPreviewList> {
 
   late List<Chat> _chats;
   bool _hasLoaded = false;
+  StreamSubscription? _stateChangedSub;
+
   @override
   void initState() {
     super.initState();
     getChats();
-    AppState().getStateChangedStream().listen((_) => setState(() => {}) );
+    _stateChangedSub = AppState().getStateChangedStream().listen((_) => setState(() => {}) );
+  }
+
+  @override
+  void dispose() {
+    _stateChangedSub?.cancel();
+    super.dispose();
   }
 
 

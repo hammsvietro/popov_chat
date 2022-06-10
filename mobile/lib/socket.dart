@@ -29,6 +29,10 @@ class SocketClient {
     _chatChannel = _socket.channel("chat:${authStorage.userId}", {});
     _subscribeToChat();
   }
+  void disconnect() {
+    _socket.disconnect();
+  }
+
   Future<void> _subscribeToChat() async {
     _chatChannel.on(
       "message",

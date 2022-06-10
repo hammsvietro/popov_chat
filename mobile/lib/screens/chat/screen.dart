@@ -32,16 +32,22 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   Future<void> loadChat() async {
     _userId = (await getAuth())!.userId;
-    _stateChangedSub = AppState()
-      .getStateChangedStream()
-      .listen(
-        (_) => setState(() {})
-      );
+    print(_userId);
     await AppState().getMoreMessages(_groupId);
     setState(() {
       _chat = AppState().getChat(_groupId);
       hasLoaded = true;
     });
+  }
+
+  @override
+  void initState() {
+    _stateChangedSub = AppState()
+      .getStateChangedStream()
+      .listen(
+        (_) => setState(() {})
+      );
+    super.initState();
   }
 
   @override

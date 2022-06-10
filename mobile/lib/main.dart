@@ -74,6 +74,7 @@ class _MyHomePageState extends State<HomePage> {
   void _doLogout() async {
     bool hasRemoved = await removeAuth();
     if(hasRemoved) {
+      SocketClient().disconnect();
       goToLoginScreen();
     }
   }
