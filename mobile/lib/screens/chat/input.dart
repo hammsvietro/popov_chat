@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:popov_chat/theme.dart';
 
@@ -11,11 +13,15 @@ class ChatInputWidget extends StatefulWidget {
 
 class _ChatInputWidgetState extends State<ChatInputWidget> {
   String? _input;
-  var _controller = TextEditingController();
+  final _controller = TextEditingController();
+  get _bottomMargin {
+    return Platform.isAndroid ? 8.0 : 28.0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 10, right: 10, bottom: 8),
+      margin: EdgeInsets.only(left: 10, right: 10, bottom: _bottomMargin),
       child: Row(
         children: [
             Expanded(child: Container(

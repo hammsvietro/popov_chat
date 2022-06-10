@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:popov_chat/model/chat.dart';
 import 'package:popov_chat/model/message.dart';
 import 'package:popov_chat/theme.dart';
@@ -14,6 +15,25 @@ class MessageListWidget extends StatefulWidget {
 
 class _MessageListWidgetState extends State<MessageListWidget> {
   String? input;
+  final DateFormat formatter = DateFormat('jm');
+
+  Widget _messageBox(Message message, bool isSelf) {
+    return Column(
+      children: [
+        (isSelf
+          ? const SizedBox.shrink()
+          : Text(message.sender.name)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(message.content, style: TextStyle(color: isSelf ? Colors.black : Colors.white)),
+            Text(formatter.format(message.insertedAt))
+          ]
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,18 +56,38 @@ class _MessageListWidgetState extends State<MessageListWidget> {
                 Row(children: [
                 ConstrainedBox(
                   constraints: const BoxConstraints(
-                    maxWidth: 250,
+                    maxWidth: 240,
                     minWidth: 50,
                     maxHeight: 1000,
                     minHeight: 40
                   ),
-                    child: Container(
+                    child: 
+                    Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         borderRadius: const BorderRadius.all(Radius.circular(8)),
                         color: isSelf ? ChatTheme.primaryColor : ChatTheme.surfaceColor
                       ),
-                      child: Text(message.content, style: TextStyle(color: isSelf ? Colors.black : Colors.white)),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          (isSelf
+                            ? const SizedBox.shrink()
+                            : Container(
+                              margin: const EdgeInsets.only(bottom: 8),
+                              child: Text(message.sender.name, style: const TextStyle(fontWeight: FontWeight.bold))
+                              )),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Flexible(child: Text(message.content, style: TextStyle(color: isSelf ? Colors.black : Colors.white)),),
+                              Text(formatter.format(message.insertedAt), style: TextStyle(color: isSelf ? Colors.black : Colors.white))
+                            ]
+                          )
+                        ],
+                      )
                     ),
                   )
                 ]),
