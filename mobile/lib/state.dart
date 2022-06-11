@@ -19,10 +19,19 @@ class AppState {
   }
 
   Future<void> setup() async {
+    await reloadChats();
+  }
+
+  Future<void> reloadChats() async {
+    clearState();
     chats.addAll(await _apiClient.listGroups());
   }
 
   final List<Chat> chats = [];
+
+  void clearState() {
+    chats.clear();
+  }
 
   List<Chat> addChat(Chat chat) {
     chats.add(chat);

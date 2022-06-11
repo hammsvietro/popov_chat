@@ -63,6 +63,22 @@ class ApiClient {
       .toList();
   }
 
+  Future<List<Chat>> listNotJoinedGroups() async {
+    var res = await _dio.get('$_apiBase/api/group/search');
+    
+    return (res.data as List)
+      .map((x) => Chat.fromMap(x))
+      .toList();
+  }
+
+  Future<void> joinGroup(int groupId) async {
+     await _dio.post('$_apiBase/api/group/$groupId');
+  }
+
+  Future<void> logout() async {
+    await _dio.delete('$_apiBase/api/group');
+  }
+
   Future<List<Message>> getMessagesForGroup(int groupId, int chunk) async {
     var res = await _dio.get('$_apiBase/api/message/$groupId', queryParameters: {'chunk': chunk});
 

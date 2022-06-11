@@ -25,18 +25,17 @@ class ChatWidget extends StatefulWidget {
 class _ChatWidgetState extends State<ChatWidget> {
   late Chat _chat;
   late int _userId;
-  bool hasLoaded = false;
+  bool _hasLoaded = false;
   StreamSubscription? _stateChangedSub;
   final SocketClient _socket = SocketClient();
   late int _groupId;
 
   Future<void> loadChat() async {
     _userId = (await getAuth())!.userId;
-    print(_userId);
     await AppState().getMoreMessages(_groupId);
     setState(() {
       _chat = AppState().getChat(_groupId);
-      hasLoaded = true;
+      _hasLoaded = true;
     });
   }
 
@@ -62,7 +61,7 @@ class _ChatWidgetState extends State<ChatWidget> {
   }
 
   get _mainWidget {
-    if(!hasLoaded) {
+    if(!_hasLoaded) {
       return Container();
     } else {
       return WillPopScope(
@@ -70,7 +69,7 @@ class _ChatWidgetState extends State<ChatWidget> {
         child: Scaffold(
 
           appBar: AppBar(
-            leadingWidth: 20,
+            leadingWidth: 25,
             title: Row(children: [
               Container(
                 width: 50,
@@ -106,7 +105,7 @@ class _ChatWidgetState extends State<ChatWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if(!hasLoaded) {
+    if(!_hasLoaded) {
       _groupId = ((ModalRoute.of(context))!.settings.arguments as ChatWidgetArguments).groupId;
       loadChat();
     }

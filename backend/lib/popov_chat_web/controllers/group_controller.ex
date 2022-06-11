@@ -18,11 +18,9 @@ defmodule PopovChatWeb.GroupController do
   end
 
   def list(conn, _) do
-    groups = conn.assigns[:current_user]
-      |> PopovChat.Groups.list_groups_user_joined()
-
-    IO.inspect(groups)
-
+    groups =
+      conn.assigns[:current_user]
+        |> PopovChat.Groups.list_groups_user_joined()
     json(conn, groups) 
   end
 

@@ -17,21 +17,42 @@ class _MessageListWidgetState extends State<MessageListWidget> {
   String? input;
   final DateFormat formatter = DateFormat('jm');
 
-  Widget _messageBox(Message message, bool isSelf) {
+
+  bool _lastMessageIsFromSameSender(Message message, int index) {
+    if(index == widget.chat.messages.length - 1) return false; 
+    return message.sender.id == widget.chat.messages[index + 1].sender.id;
+  }
+  Widget _messageBox(Message message, int index, bool isSelf) {
     return Column(
+      key: Key(message.id.toString()),
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        (isSelf
+        ((isSelf || _lastMessageIsFromSameSender(message, index))
           ? const SizedBox.shrink()
-          : Text(message.sender.name)),
+          : Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              message.sender.name,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: ChatTheme.primaryColor
+              )
+            )
+          )
+        ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(message.content, style: TextStyle(color: isSelf ? Colors.black : Colors.white)),
-            Text(formatter.format(message.insertedAt))
+            Flexible(child: Text(message.content, style: TextStyle(color: isSelf ? Colors.black : Colors.white)),),
+            Text(formatter.format(message.insertedAt), style: TextStyle(color: isSelf ? Colors.black : Colors.white))
           ]
         )
       ],
     );
+
   }
 
   @override
@@ -61,39 +82,19 @@ class _MessageListWidgetState extends State<MessageListWidget> {
                     maxHeight: 1000,
                     minHeight: 40
                   ),
-                    child: 
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(8)),
-                        color: isSelf ? ChatTheme.primaryColor : ChatTheme.surfaceColor
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          (isSelf
-                            ? const SizedBox.shrink()
-                            : Container(
-                              margin: const EdgeInsets.only(bottom: 8),
-                              child: Text(message.sender.name, style: const TextStyle(fontWeight: FontWeight.bold))
-                              )),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Flexible(child: Text(message.content, style: TextStyle(color: isSelf ? Colors.black : Colors.white)),),
-                              Text(formatter.format(message.insertedAt), style: TextStyle(color: isSelf ? Colors.black : Colors.white))
-                            ]
-                          )
-                        ],
-                      )
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      color: isSelf ? ChatTheme.primaryColor : ChatTheme.surfaceColor
                     ),
+                    child: _messageBox(message, index, isSelf)
                   )
-                ]),
-              ],
-            ), 
-          );
+                )
+              ])
+            ]
+          )
+        );
       }),
     );
   }

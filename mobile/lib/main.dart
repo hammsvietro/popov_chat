@@ -4,7 +4,6 @@ import 'package:popov_chat/api.dart';
 import 'package:popov_chat/components/chat_preview_list.dart';
 import 'package:popov_chat/func/auth.dart';
 import 'package:popov_chat/routes.dart';
-import 'package:popov_chat/screens/chat/screen.dart';
 import 'package:popov_chat/socket.dart';
 import 'package:popov_chat/state.dart';
 import 'package:popov_chat/theme.dart';
@@ -71,10 +70,19 @@ class _MyHomePageState extends State<HomePage> {
     Navigator.pushNamedAndRemoveUntil(context, '/authenticate', (_) => false);
   }
 
+  void _goToNewGroup() async {
+    Navigator.push(context, materialRoutes['/create-group']!);
+  }
+
+  void _goToFindGroup() async {
+    Navigator.push(context, materialRoutes['/find-groups']!);
+  }
+
   void _doLogout() async {
     bool hasRemoved = await removeAuth();
     if(hasRemoved) {
       SocketClient().disconnect();
+      AppState().clearState();
       goToLoginScreen();
     }
   }
@@ -97,12 +105,22 @@ class _MyHomePageState extends State<HomePage> {
                 ),
                 const PopupMenuItem<int>(
                     value: 1,
+                    child: Text("Find a group", style: TextStyle(color: Colors.black)),
+                ),
+                const PopupMenuItem<int>(
+                    value: 2,
                     child: Text("Logout", style: TextStyle(color: Colors.black)),
                 ),
               ];
             },
             onSelected: (value){
-              if(value == 1){
+              if(value == 0) {
+                _goToNewGroup();
+              }
+              if(value == 1) {
+                _goToFindGroup();
+              }
+              if(value == 2){
                  _doLogout(); 
               }
             }
@@ -110,6 +128,6 @@ class _MyHomePageState extends State<HomePage> {
         ],
       ),
       // body: ChatWidget(key: widget.key, groupId: 11,));
-      body: const ChatPreviewList());
+      body: const ChatPreviewList(mode: ChatPreviewMode.joined,));
   }
 }

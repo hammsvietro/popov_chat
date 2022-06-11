@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:popov_chat/func/validators.dart';
 import 'package:popov_chat/model/user.dart';
 
@@ -18,6 +20,8 @@ class _RegisterFormState extends State<RegisterForm> {
 
   final _formKey = GlobalKey<FormState>();
   final _registerRequest = RegisterRequest(email: '', password: '', nickname: '');
+  final ImagePicker _picker = ImagePicker();
+  Image? profilePicture;
 
  void submit() {
     // First validate form.
@@ -27,12 +31,20 @@ class _RegisterFormState extends State<RegisterForm> {
     }
   }
 
+ Future<void> _selectProfilePicture() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      profilePicture = Image.file(File(image.path), height: 100,);
+      setState(() {});
+    }
+ }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        width: 300,
-        height: 300,
-        child: Form(
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 300),
+      child: SingleChildScrollView(
+          child: Form(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -46,12 +58,10 @@ class _RegisterFormState extends State<RegisterForm> {
                 validator: validateEmail,
                 onChanged: (value) => _registerRequest.email = value,
               ),
-              const Spacer(),
               TextFormField(
                 decoration: const InputDecoration(labelText: "Nickname"),
                 onChanged: (value) => _registerRequest.nickname = value,
               ),
-              const Spacer(),
               TextFormField(
                 obscureText: true,
                 enableSuggestions: false,
@@ -60,7 +70,17 @@ class _RegisterFormState extends State<RegisterForm> {
                 validator: validatePassword,
                 onChanged: (value) => _registerRequest.password = value,
               ),
-              const Spacer(),
+
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 40),
+                child: profilePicture != null ? profilePicture! : const SizedBox(),
+              ),
+              
+              ElevatedButton(
+                onPressed: _selectProfilePicture,
+                child: const Text("Select profile picture")
+              ),
+              const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: SizedBox(
@@ -74,6 +94,7 @@ class _RegisterFormState extends State<RegisterForm> {
             ],
           ),
         ),
-      );
+      )  
+    );
   }
 }

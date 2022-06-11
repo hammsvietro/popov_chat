@@ -19,7 +19,6 @@ defmodule PopovChat.Messages do
   end
 
   defp _notify_new_message(%Message{} = message) do
-    IO.inspect(message)
     message.group_id
       |> PopovChat.Groups.get_user_ids_by_group
       |> Enum.each(fn user_id -> 

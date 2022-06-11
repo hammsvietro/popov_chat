@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+
 import 'package:popov_chat/model/message.dart';
 import 'package:popov_chat/model/user.dart';
 
@@ -50,15 +51,28 @@ class Chat {
       name: map["name"],
       image: map["image"],
       id: map["id"],
-      users: (map["users"] as List<dynamic>)
-          .map((e) => User.fromPayload((e))).toList(),
+      users: (map["users"] as List<dynamic>?)?.map((e) => User.fromPayload((e))).toList() ?? [],
       messages: 
-        (map["messages"]  as List<dynamic>)
-          .map((e) => Message.fromPayload(e)).toList()
+        (map["messages"]  as List<dynamic>?)
+          ?.map((e) => Message.fromPayload(e)).toList() ?? []
     );
   }
 
   static List<Chat> manyFromMap(List<Map<String, dynamic>> mapList) {
     return mapList.map((e) => Chat.fromMap(e)).toList();
+  }
+}
+
+class CreateChatRequest {
+  String? name;
+  File? image;
+
+  CreateChatRequest();
+
+  Map<String, dynamic>toMap() {
+    return {
+      'name': name,
+      'image': image
+    };
   }
 }

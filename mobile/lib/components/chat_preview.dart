@@ -5,8 +5,15 @@ import 'package:popov_chat/screens/chat/screen.dart';
 
 class ChatPreviewComponent extends StatefulWidget {
   final Chat chatPreview;
-  const ChatPreviewComponent({Key? key, required this.chatPreview}) : super(key: key);
-   
+  final void Function(int) onTap;
+  final bool showMessage;
+  const ChatPreviewComponent({
+    Key? key,
+    required this.chatPreview,
+    required this.onTap,
+    required this.showMessage
+  }) : super(key: key);
+
   @override
   State<ChatPreviewComponent> createState() => _ChatPreviewState();
 } 
@@ -44,11 +51,7 @@ class _ChatPreviewState extends State<ChatPreviewComponent> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.pushNamed(
-        context,
-        '/chat',
-        arguments: ChatWidgetArguments(groupId: widget.chatPreview.id)
-      ),
+      onTap: () => widget.onTap(widget.chatPreview.id),
       child: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -87,10 +90,13 @@ class _ChatPreviewState extends State<ChatPreviewComponent> {
                         fontSize: 16
                       )
                     ),
-                    Container(
+                    (widget.showMessage
+                      ? Container(
                       margin: const EdgeInsets.only(top: 2),
                       constraints: const BoxConstraints(maxWidth: 220),
                       child: message
+                      )
+                      : const SizedBox.shrink()
                     )
                   ]
                 )

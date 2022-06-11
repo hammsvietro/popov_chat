@@ -6,6 +6,7 @@ import 'package:popov_chat/model/user.dart';
 import 'package:popov_chat/screens/login/login_form.dart';
 import 'package:popov_chat/screens/login/register_form.dart';
 import 'package:popov_chat/socket.dart';
+import 'package:popov_chat/state.dart';
 import 'package:popov_chat/theme.dart';
 
 
@@ -30,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
       var authStorage = AuthStorage(token: authResponse.token!, userId: authResponse.userId!);
       await saveAuth(authStorage);
       SocketClient().connectPhoenix();
+      await AppState().reloadChats();
       _goToMainScreen();
     }
   }
@@ -65,26 +67,28 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(title: Text(title), backgroundColor: ChatTheme.backgroundColor, foregroundColor: Colors.white,),
       body: Center(
         key: widget.key,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _targetForm,
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    isRegistering = !isRegistering;
-                  });
-                },
-                child: Text(
-                  _switchButtonText,
-                  style: const TextStyle(color: ChatTheme.primaryColor)
-                ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _targetForm,
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 20),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isRegistering = !isRegistering;
+                    });
+                  },
+                  child: Text(
+                    _switchButtonText,
+                    style: const TextStyle(color: ChatTheme.primaryColor)
+                  ),
+                )
               )
-            )
-          ],
-        )
+            ],
+          )
+        )       
       ),
     );
   }

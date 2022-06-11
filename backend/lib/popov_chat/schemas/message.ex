@@ -14,7 +14,8 @@ defmodule PopovChat.Schemas.Message do
   @doc false
   def changeset(message, attrs) do
     message
-      |> cast(attrs, [:content, :image, :user_id, :group_id])
+      |> cast(attrs, [:image, :user_id, :group_id])
+      |> put_change(:content, String.trim(attrs["content"]))
       |> validate_required([:content])
   end
 

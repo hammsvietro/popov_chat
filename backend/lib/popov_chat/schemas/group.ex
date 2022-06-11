@@ -9,11 +9,15 @@ defmodule PopovChat.Schemas.Group do
     end
 
     defp _get_base(value) do
-      if Ecto.assoc_loaded?(value.users) do
-        [:id, :image, :name, :users, :messages]
-      else
-        [:id, :image, :name, :messages]
-      end
+      value
+        |> Map.to_list()
+        |> Enum.map(fn {key, val} -> 
+          if is_struct(val, Ecto.Association.NotLoaded) or key == :__meta__ or key == :__struct__ do
+            nil
+          else
+            key
+          end
+      end)
     end
   end
 
