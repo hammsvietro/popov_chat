@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:popov_chat/model/network.dart';
 class User {
@@ -32,12 +34,18 @@ class RegisterRequest {
   String nickname;
   String password;
   String email;
-  RegisterRequest({required this.nickname, required this.password, required this.email});
+  File? profilePicture;
+  RegisterRequest({
+    required this.nickname,
+    required this.password,
+    required this.email,
+  });
   Map<String, dynamic> toMap() {
     return {
       'nickname': nickname,
       'password': password,
       'email': email,
+      'profile_picture': profilePicture
     };
   }
 }

@@ -28,21 +28,23 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onLoginFormSubmit(LoginRequest login) async {
     var authResponse = await _apiClient.loginUser(login);
     if (authResponse.success) {
-      var authStorage = AuthStorage(token: authResponse.token!, userId: authResponse.userId!);
-      await saveAuth(authStorage);
-      SocketClient().connectPhoenix();
-      await AppState().reloadChats();
-      _goToMainScreen();
+      _onLoginSuccess(authResponse);
     }
   }
   
   void _onRegisterFormSubmit(RegisterRequest register) async {
     var authResponse = await _apiClient.registerUser(register);
     if (authResponse.success) {
+      _onLoginSuccess(authResponse);
+    }
+  }
+
+  _onLoginSuccess(AuthenticationResponse authResponse) async {
       var authStorage = AuthStorage(token: authResponse.token!, userId: authResponse.userId!);
       await saveAuth(authStorage);
+      SocketClient().connectPhoenix();
+      await AppState().reloadChats();
       _goToMainScreen();
-    }
   }
 
   void _goToMainScreen() {

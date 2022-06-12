@@ -35,6 +35,7 @@ class _RegisterFormState extends State<RegisterForm> {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       File file = File(image.path);
+      _registerRequest.profilePicture = file;
       profilePicture = Image.file(file, height: 100,);
       setState(() {});
     }

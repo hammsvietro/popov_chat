@@ -37,13 +37,19 @@ class ApiClient {
   }
 
   Future<AuthenticationResponse> registerUser(RegisterRequest request) async {
-    http.Response res = await http.post(
-      Uri.parse('$_apiBase/api/user/register'),
-      headers: {"Content-Type": "application/json"},
-      body: json.encode(request.toMap())
+    String filename = request.profilePicture!.path.split('/').last;
+    var form = FormData.fromMap({
+      'nickname': request.nickname,
+      'email': request.email,
+      'password': request.password,
+      'profile_picture': await MultipartFile.fromFile(request.profilePicture!.path, filename: filename)
+    });
+    var res = await _dio.post(
+      '$_apiBase/api/user/register',
+      data: form
     );
     
-    return AuthenticationResponse.fromJSON(json.decode(res.body));
+    return AuthenticationResponse.fromJSON(res.data!);
   }
 
   Future<AuthenticationResponse> loginUser(LoginRequest request) async {
