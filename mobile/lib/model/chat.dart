@@ -22,7 +22,7 @@ class Chat {
     _messages = messages;
   }
 
-  get messages {
+  List<Message> get messages {
     return _messages;
   }
 

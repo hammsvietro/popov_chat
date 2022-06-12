@@ -25,6 +25,8 @@ class AppState {
   Future<void> reloadChats() async {
     clearState();
     chats.addAll(await _apiClient.listGroups());
+    sortChats();
+    _controller.add(true);
   }
 
   final List<Chat> chats = [];
@@ -37,6 +39,15 @@ class AppState {
     chats.add(chat);
     _controller.add(true);
     return chats;
+  }
+
+  void sortChats() {
+    chats.sort((a, b) {
+      if(a.messages.isEmpty || b.messages.isEmpty) {
+        return a.messages.isEmpty ? 1 : -1;
+      }
+      return b.messages.first.insertedAt.compareTo(a.messages.first.insertedAt);
+    });
   }
 
   Chat getChat(int chatId) {
@@ -65,6 +76,7 @@ class AppState {
     chats
       .firstWhere((chat) => chat.id == message.groupId)
       .addMessage(message);
+    sortChats();
     _controller.add(true);
   }
 }

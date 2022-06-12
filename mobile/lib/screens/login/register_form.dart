@@ -34,7 +34,8 @@ class _RegisterFormState extends State<RegisterForm> {
  Future<void> _selectProfilePicture() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      profilePicture = Image.file(File(image.path), height: 100,);
+      File file = File(image.path);
+      profilePicture = Image.file(file, height: 100,);
       setState(() {});
     }
  }

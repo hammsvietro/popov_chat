@@ -75,6 +75,16 @@ class ApiClient {
      await _dio.post('$_apiBase/api/group/$groupId');
   }
 
+  Future<Chat> createGroup(CreateChatRequest request) async {
+    String filename = request.image!.path.split('/').last;
+    var form = FormData.fromMap({
+      'name': request.name,
+      'image': await MultipartFile.fromFile(request.image!.path, filename: filename)
+    });
+    var res = await _dio.post('$_apiBase/api/group', data: form);
+    return Chat.fromMap(res.data!["group"]);
+  }
+
   Future<void> logout() async {
     await _dio.delete('$_apiBase/api/group');
   }
