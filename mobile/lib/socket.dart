@@ -25,7 +25,10 @@ class SocketClient {
   connectPhoenix() async {
     var authStorage = await getAuth();
     if(authStorage != null) {
-      _socket = PhoenixSocket("${dotenv.env["SOCKET_ENDPOINT_ADDRESS"]}/socket/websocket",  socketOptions: PhoenixSocketOptions(params: {"user_token":  authStorage.token}));
+      _socket = PhoenixSocket(
+        "${dotenv.env["SOCKET_ENDPOINT_ADDRESS"]}/socket/websocket",
+        socketOptions: PhoenixSocketOptions(params: {"user_token":  authStorage.token})
+      );
       await _socket.connect();
       _chatChannel = _socket.channel("chat:${authStorage.userId}", {});
       _subscribeToChat();

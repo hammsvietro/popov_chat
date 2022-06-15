@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:popov_chat/api.dart';
+import 'package:popov_chat/func/auth.dart';
 import 'package:popov_chat/model/chat.dart';
 import 'package:popov_chat/model/message.dart';
 import 'package:rxdart/rxdart.dart';
@@ -19,7 +20,10 @@ class AppState {
   }
 
   Future<void> setup() async {
-    await reloadChats();
+    var authStorage = await getAuth();
+    if(authStorage != null) {
+      await reloadChats();
+    }
   }
 
   Future<void> reloadChats() async {

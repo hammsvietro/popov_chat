@@ -11,9 +11,13 @@ import 'package:popov_chat/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await ApiClient().setup();
-  await SocketClient().setup();
-  await AppState().setup();
+  try {
+    await ApiClient().setup();
+    await SocketClient().setup();
+    await AppState().setup();
+  } catch(e) {
+    await removeAuth();
+  }
   runApp(const MyApp());
 }
 
